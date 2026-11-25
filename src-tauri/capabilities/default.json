@@ -1,0 +1,12 @@
+{
+  "identifier": "default",
+  "description": "Island windows",
+  "windows": ["main", "snip"],
+  "permissions": [
+    "core:default",
+    "clipboard-manager:allow-read-text",
+    "clipboard-manager:allow-write-text",
+    "opener:allow-open-url",
+    "dialog:allow-open"
+  ]
+}

@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <title>Island</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="island" data-state="hidden">
+    <div id="pill">
+      <span class="status-cover" aria-hidden="true" hidden><i data-icon="note"></i></span>
+      <span id="clock">--:--</span>
+      <span class="eq" aria-hidden="true" hidden><i></i><i></i><i></i><i></i><i></i><i></i></span>
+    </div>
+
+    <div id="notice" inert>
+      <span id="n-icon">📋</span><span id="n-text"></span>
+      <span id="n-btns"><button id="n-again">Ещё раз</button><button id="n-ok" data-icon="check"></button></span>
+    </div>
+
+    <div id="panel" inert>
+      <div id="toast" hidden></div>
+      <div id="top">
+        <nav>
+          <button class="tab active" data-tab="home" title="Главная"><i data-icon="home"></i><span>Главная</span></button>
+          <button class="tab" data-tab="tasks" title="Задачи"><i data-icon="tasks"></i><span>Задачи</span></button>
+          <button class="tab" data-tab="clip" title="Буфер"><i data-icon="clip"></i><span>Буфер</span></button>
+          <button class="tab" data-tab="notes" title="Напоминания и заметки"><i data-icon="bulb"></i><span>Заметки</span></button>
+          <button class="tab" data-tab="weather" title="Погода"><i data-icon="cloud"></i><span>Погода</span></button>
+          <button class="tab" data-tab="settings" title="Настройки"><i data-icon="gear"></i><span>Настройки</span></button>
+        </nav>
+        <div class="top-status">
+          <span class="status-cover" aria-hidden="true" hidden><i data-icon="note"></i></span>
+          <button id="close" aria-label="Свернуть" title="Свернуть"><span id="panel-clock">--:--</span></button>
+          <span class="eq" aria-hidden="true" hidden><i></i><i></i><i></i><i></i><i></i><i></i></span>
+        </div>
+      </div>
+
+      <!-- ===== Главная ===== -->
+      <section class="page active" id="page-home">
+        <div class="home">
+          <div class="player" id="player">
+            <div class="cover m-cover"><i data-icon="note"></i></div>
+            <div class="m-title">Ничего не играет</div>
+            <div class="m-sub">Включи музыку в любом плеере</div>
+            <div class="m-ctl">
+              <button class="m-prev" data-icon="prev" title="Предыдущий"></button>
+              <button class="m-play" data-icon="play" title="Пауза / воспроизведение"></button>
+              <button class="m-next" data-icon="next" title="Следующий"></button>
+            </div>
+            <div class="m-prog">
+              <div class="m-times"><span class="m-pos">0:00</span><span class="m-end">--:--</span></div>
+              <div class="m-bar" id="m-bar"><u></u></div>
+            </div>
+          </div>
+
+          <div class="tiles">
+            <button class="tile" data-act="ocr" style="--i:0"><i data-icon="ocr"></i><em>Текст с экрана</em></button>
+            <button class="tile" data-act="timer" style="--i:1"><i data-icon="timer"></i><em>Таймер</em></button>
+            <button class="tile" data-act="layout" style="--i:2"><i data-icon="layout"></i><em>Раскладка</em></button>
+            <button class="tile" data-act="templates" style="--i:3"><i data-icon="templates"></i><em>Шаблоны</em></button>
+            <button class="tile" data-act="explorer" style="--i:4"><i data-icon="clipper"></i><em>Проводник</em></button>
+            <button class="tile" data-act="translate" style="--i:5"><i data-icon="translate"></i><em>Перевод</em></button>
+          </div>
+
+          <div class="volrow">
+            <button id="mixer" data-icon="mixer" title="Микшер громкости Windows"></button>
+            <div class="seg2" id="vol-mode">
+              <button data-mode="pc" data-icon="monitor" class="on" title="Громкость всего компьютера"></button>
+              <button data-mode="music" data-icon="note" title="Громкость только музыки"></button>
+            </div>
+            <button class="vol-ico" id="vol-ico" data-icon="speaker" title="Выключить звук"></button>
+            <input type="range" class="vol" min="0" max="100" value="50" />
+            <span class="vol-n">50</span>
+            <button id="device" title="Устройство вывода звука"><i data-icon="speaker" id="device-ico"></i><span id="device-name">Динамики</span></button>
+          </div>
+
+          <div class="buddy">
+            <div class="eyes-box" id="eyes"><i class="eye"></i><i class="eye"></i></div>
+            <div class="say-box"><span id="say">Я тут. С тобой.</span></div>
+          </div>
+
+          <div class="slots" id="slots"></div>
+
+          <!-- ===== Таймер ===== -->
+          <div class="sheet" id="sheet-timer" inert>
+            <div class="sheet-h"><button class="back" data-icon="back" aria-label="На главную"></button><b>Таймер</b></div>
+            <div class="tm">
+              <div class="ring">
+                <svg viewBox="0 0 120 120"><circle class="bg" cx="60" cy="60" r="52"></circle><circle id="tm-arc" class="fg" cx="60" cy="60" r="52"></circle></svg>
+                <div id="tm-time">05:00</div>
+              </div>
+              <div class="tm-side">
+                <div class="chips">
+                  <button data-min="1">1 мин</button><button data-min="5">5 мин</button><button data-min="10">10 мин</button>
+                  <button data-min="15">15 мин</button><button data-min="30">30 мин</button><button data-min="60">1 час</button>
+                </div>
+                <div class="tm-set"><input id="tm-m" type="number" min="0" max="999" value="5" /><span>мин</span><input id="tm-s" type="number" min="0" max="59" value="0" /><span>сек</span></div>
+                <div class="tm-btns"><button id="tm-go">Старт</button><button id="tm-reset">Сброс</button></div>
+                <div class="hint">Когда время выйдет, остров выедет сверху и заиграет сигнал.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ===== Шаблоны ===== -->
+          <div class="sheet" id="sheet-templates" inert>
+            <div class="sheet-h"><button class="back" data-icon="back" aria-label="На главную"></button><b>Шаблоны</b></div>
+            <div class="tpl-form">
+              <div class="tpl-fields">
+                <input id="tpl-title" aria-label="Название шаблона" placeholder="Название шаблона…" maxlength="40" />
+                <input id="tpl-category" aria-label="Название категории" placeholder="Название категории…" maxlength="40" />
+                <div class="tpl-submit">
+                  <p class="hint">Клик по шаблону копирует его</p>
+                  <div class="tpl-btns"><button id="tpl-save">Добавить</button><button id="tpl-cancel" hidden>Отмена</button></div>
+                </div>
+              </div>
+              <textarea id="tpl-text" aria-label="Текст шаблона" placeholder="Текст шаблона…"></textarea>
+            </div>
+            <label class="tpl-filter"><span>Поиск по категории</span><select id="tpl-filter"></select></label>
+            <div id="tpl-list" class="list"></div>
+          </div>
+
+          <!-- ===== Перевод ===== -->
+          <div class="sheet" id="sheet-translate" inert>
+            <div class="sheet-h"><button class="back" data-icon="back" aria-label="На главную"></button><b>Перевод</b>
+              <span class="tr-dir"><span id="tr-from">Авто</span> <i data-icon="swap"></i></span>
+              <select id="tr-to"></select>
+              <button id="tr-paste" class="small">Вставить из буфера</button>
+              <button id="tr-web" class="small">В браузере</button></div>
+            <div class="tr-cols">
+              <textarea id="tr-in" placeholder="Впиши или вставь текст…"></textarea>
+              <div class="tr-out-wrap"><textarea id="tr-out" readonly placeholder="Здесь появится перевод"></textarea>
+                <button id="tr-copy" class="small">Копировать перевод</button></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== Задачи ===== -->
+      <section class="page" id="page-tasks">
+        <div class="task-compose">
+          <form id="task-form" class="row"><input id="task-input" aria-label="Новая задача" placeholder="Новая задача…" maxlength="120" /><button id="task-add" data-icon="plus" aria-label="Добавить задачу" title="Добавить задачу"></button></form>
+          <div id="task-categories" role="group" aria-label="Категория новой задачи"></div>
+        </div>
+        <div class="task-scroll">
+          <div id="task-list" class="list"></div>
+          <div id="task-footer" class="row foot" hidden><span id="task-count" class="hint"></span><button id="task-clear" class="small">Убрать выполненные</button></div>
+        </div>
+      </section>
+
+      <!-- ===== Буфер ===== -->
+      <section class="page" id="page-clip">
+        <div class="search-field"><i data-icon="search" aria-hidden="true"></i><input id="clip-search" aria-label="Поиск по истории буфера" placeholder="Поиск по истории…" /></div>
+        <div id="clip-list" class="list surface"></div>
+      </section>
+
+      <!-- ===== Напоминания и заметки ===== -->
+      <section class="page" id="page-notes">
+        <div class="notes-grid">
+          <div class="col surface"><label class="section-title" for="note"><i data-icon="edit" aria-hidden="true"></i>Заметка</label><textarea id="note" placeholder="Заметка сохраняется сама…"></textarea></div>
+          <div class="col surface">
+            <h2 class="section-title"><i data-icon="timer" aria-hidden="true"></i>Напоминания</h2>
+            <form id="rem-form" class="row">
+              <span class="hint">Через</span><input id="rem-min" type="number" min="1" value="30" aria-label="Минут до напоминания" /><span class="hint">мин</span>
+              <input id="rem-text" aria-label="Текст напоминания" placeholder="О чём напомнить" /><button id="rem-add" class="primary" data-icon="plus" aria-label="Добавить напоминание"></button>
+            </form>
+            <div id="rem-list" class="list"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== Погода ===== -->
+      <section class="page" id="page-weather">
+        <div class="search-field"><i data-icon="search" aria-hidden="true"></i><input id="wx-city" aria-label="Город" placeholder="Введите город и нажмите Enter" /></div>
+        <div id="wx"></div>
+      </section>
+
+      <!-- ===== Настройки ===== -->
+      <section class="page" id="page-settings">
+        <div class="settings">
+          <div class="srow surface"><h2 class="section-title"><i data-icon="translate" aria-hidden="true"></i>Язык</h2>
+            <div class="seg" id="language-seg" role="group" aria-label="Язык интерфейса"><button data-language="ru">Русский</button><button data-language="en">English</button></div></div>
+          <div class="srow surface"><h2 class="section-title"><i data-icon="layout" aria-hidden="true"></i>Автоскрытие</h2><button id="autohide" class="on" role="switch" aria-label="Автоскрытие" title="Прятать остров, когда мышь далеко от верха экрана"><span class="sw"><i></i></span></button></div>
+          <div class="srow surface"><h2 class="section-title"><i data-icon="monitor" aria-hidden="true"></i>Тема Windows</h2>
+            <div class="seg" id="win-seg" role="group" aria-label="Тема Windows"><button data-win="dark">Тёмная</button><button data-win="light">Светлая</button></div></div>
+        </div>
+        <h2 class="section-title">Питание компьютера</h2>
+        <div class="power">
+          <button class="tile" data-sys="lock"><i data-icon="lock"></i><em>Блокировка</em></button>
+          <button class="tile" data-sys="sleep"><i data-icon="moon"></i><em>Сон</em></button>
+          <button class="tile" data-sys="restart"><i data-icon="restart"></i><em>Перезагрузка</em></button>
+          <button class="tile" data-sys="shutdown"><i data-icon="power"></i><em>Выключение</em></button>
+        </div>
+      </section>
+    </div>
+    <dialog id="shortcut-picker" aria-labelledby="shortcut-heading">
+      <div class="sheet-h"><b id="shortcut-heading">Добавить ярлык</b><button id="shortcut-close" class="action" data-icon="close" aria-label="Закрыть"></button></div>
+      <div class="row"><input id="shortcut-search" placeholder="Найти приложение…" aria-label="Поиск приложений" autofocus /><button id="shortcut-file" class="small">Выбрать файл</button></div>
+      <div id="shortcut-apps" class="list" aria-live="polite"></div>
+    </dialog>
+  </div>
+  <button id="timer-status" data-icon="stopwatch" aria-label="Открыть таймер" hidden></button>
+  <script src="i18n.js"></script>
+  <script src="start.js"></script>
+</body>
+</html>

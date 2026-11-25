@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<style>
+  html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; user-select: none; cursor: crosshair;
+    background: rgba(0, 0, 0, .30); font-family: "Segoe UI", sans-serif; }
+  #hint { position: fixed; top: 28px; left: 50%; transform: translateX(-50%); padding: 9px 18px; border-radius: 20px;
+    background: rgba(20, 20, 22, .92); color: #fff; font-size: 14px; pointer-events: none; }
+  #box { position: fixed; display: none; border: 2px solid #8ea2ff; border-radius: 3px;
+    box-shadow: 0 0 0 9999px rgba(0, 0, 0, .38); pointer-events: none; }
+</style>
+</head>
+<body>
+<div id="hint">Выдели область с текстом · Esc или правая кнопка: отмена</div>
+<div id="box"></div>
+<script src="i18n.js"></script>
+<script>
+  const { invoke } = window.__TAURI__.core;
+  const box = document.getElementById('box');
+  let sx = 0, sy = 0, drag = false, done = false;
+  function rect(x, y) { return { x: Math.min(sx, x), y: Math.min(sy, y), w: Math.abs(x - sx), h: Math.abs(y - sy) }; }
+  addEventListener('mousedown', (e) => {
+    if (e.button !== 0) { cancel(); return; }
+    drag = true; sx = e.clientX; sy = e.clientY;
+    document.body.style.background = 'transparent';
+    box.style.display = 'block';
+    Object.assign(box.style, { left: sx + 'px', top: sy + 'px', width: '0px', height: '0px' });
+  });
+  addEventListener('mousemove', (e) => {
+    if (!drag) return;
+    const r = rect(e.clientX, e.clientY);
+    Object.assign(box.style, { left: r.x + 'px', top: r.y + 'px', width: r.w + 'px', height: r.h + 'px' });
+  });
+  addEventListener('mouseup', (e) => {
+    if (!drag || done) return;
+    drag = false;
+    const r = rect(e.clientX, e.clientY);
+    if (r.w < 6 || r.h < 6) { cancel(); return; }
+    done = true;
+    invoke('snip_done', { x: r.x, y: r.y, w: r.w, h: r.h, dpr: window.devicePixelRatio || 1 });
+  });
+  addEventListener('keydown', (e) => { if (e.key === 'Escape') cancel(); });
+  addEventListener('contextmenu', (e) => { e.preventDefault(); cancel(); });
+  function cancel() { if (done) return; done = true; invoke('snip_cancel'); }
+</script>
+</body>
+</html>
